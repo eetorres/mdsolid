@@ -259,7 +259,7 @@ Ca_X_Axis *_m_v=(Ca_X_Axis *)0;
 Ca_Y_Axis *_m_f=(Ca_Y_Axis *)0;
 
 int main(int argc, char **argv) {
-  { w_implant = new Fl_Double_Window(680, 625, "Solid State Molecular Dynamic Simulations");
+  { w_implant = new Fl_Double_Window(680, 625, "Molecular Dynamic Simulation");
     { viz3d = new fl_md_sim(210, 3, 465, 415, "There is not OpenGL available");
       viz3d->box(FL_THIN_DOWN_BOX);
       viz3d->color(FL_BACKGROUND_COLOR);

@@ -1,20 +1,21 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0109 
-header_name {../include/mdsolid.h} 
+version 1.0305
+header_name {../include/mdsolid.h}
 code_name {../src/mdsolid.cxx}
-decl {\#include <cmd.h>} {public
-} 
+decl {\#include <cmd.h>} {public local
+}
 
-decl {int _stp, _n_ep;} {public
-} 
+decl {int _stp, _n_ep;} {public local
+}
 
-decl {//Ca_LinePoint *P;} {} 
+decl {//Ca_LinePoint *P;} {private local
+}
 
 Function {} {open
 } {
   Fl_Window w_implant {
-    label {Solid State Molecular Dynamic Simulations} open
-    xywh {500 186 680 625} type Double resizable visible
+    label {Molecular Dynamic Simulation} open selected
+    xywh {289 103 680 625} type Double resizable visible
   } {
     Fl_Box viz3d {
       label {There is not OpenGL available}
@@ -256,7 +257,7 @@ viz3d->redraw();}
           label {@>}
           callback {//
   // Initial atom positions
-  viz3d->eval_eos_lattice();} selected
+  viz3d->eval_eos_lattice();}
           xywh {55 374 34 21}
         }
       }
@@ -349,7 +350,7 @@ viz3d->redraw();}
       }
     }
   }
-} 
+}
 
 Function {set_k_axis()} {} {
   code {//_k_e->minimum(0.0);
@@ -379,7 +380,7 @@ _k_t->axis_color(FL_WHITE);
 
 _k_ener->clear();
 _k_t->maximum(_n_ep);} {}
-} 
+}
 
 Function {set_u_axis()} {} {
   code {_u_e->minimum(-1.0);
@@ -409,7 +410,7 @@ _u_t->axis_color(FL_WHITE);
 
 _u_ener->clear();
 _u_t->maximum(_n_ep);} {}
-} 
+}
 
 Function {set_t_axis()} {} {
   code {//_t_e->minimum(0.0);
@@ -439,7 +440,7 @@ _t_t->axis_color(FL_WHITE);
 
 _t_ener->clear();
 _t_t->maximum(_n_ep);} {}
-} 
+}
 
 Function {set_m_axis()} {} {
   code {_m_f->minimum(-0.01);
@@ -469,4 +470,4 @@ _m_v->axis_color(FL_WHITE);
 
 _m_vel->clear();
 _m_v->maximum(viz3d->get_veldist_size());} {}
-} 
+}
