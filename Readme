@@ -3,6 +3,8 @@
 This is a basic molecular dynamics simulation code
 of solids using embedded atom method potentials
 
+https://github.com/eetorres/mdsolid/blob/master/screenshot.png
+
 Computations:
 - particle dynamics
 - Kinetics energy
