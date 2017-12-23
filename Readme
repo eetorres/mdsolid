@@ -1,31 +1,10 @@
 # Edmanuel Torres 04/07/2007
-# Makefile for GNU/Linux
 
-Version para 64bit AMD Athlon X2
+This is a basic molecular dynamics simulation code
+of solids using embedded atom method potentials
 
-This  is a  basic program to run  molecular dynamics simulation
-of gases monoatomicos, el potencial de Lernard-Joes es empleado
-ajustado para un gas de argon.
-
-Optimisaciones:
-1) Cell list
-2) Neighbor list
-3) Shell list
-
-Computation:
+Computations:
 - particle dynamics
 - Kinetics energy
 - Potential energy
-- Temperature
-- Density
-
-NOTE: Use a minimun cells of (3x3x3) with the neighbor list 
-
-El programa recibe como  entrada la densidad para luego con esta 
-calcula  la  constante ustilizada  para fijar la distribucion de 
-particulas en una red cubica  pero ligeramente desplazadas de la 
-posicion y las velocidades iniciales son aleatorias con un valor 
-maximo inicial.
-
-
 
