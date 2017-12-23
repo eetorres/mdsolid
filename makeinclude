@@ -1,0 +1,26 @@
+# Edmanuel Torres 2007-2017
+# Makefile for GNU/Linux
+
+CXX = g++
+
+PRGS = mdsolid
+SCRS = $(PRGS).cxx fl_md_sim.cxx cmd.cxx catom.cxx cforce.cxx cread.cxx timer.cxx Cartesian.cxx
+OBJS = $(SCRS:.cxx=.o)
+
+MDIR=$(shell sh -c pwd)
+SDIR=$(MDIR)/../src/
+XDIR=$(MDIR)/../bin/
+INCL=-I../include -I../
+
+OPTIM  = -O3 -Wall -Wno-deprecated
+
+# Fltk libraries
+LFLTK = $(shell fltk-config  --use-gl --ldstaticflags)
+
+CFLAGS = $(OPTIM) -c 
+LFLAGS = $(OPTIM) $(LFLTK) $(LX11R)
+
+.SUFFIXES:	.cxx .o .h
+
+.cxx.o: 
+	$(CXX) $(CFLAGS) $< -o $@ $(INCL) $(FLTK) $(IDIR)

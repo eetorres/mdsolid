@@ -1,0 +1,472 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0109 
+header_name {../include/mdsolid.h} 
+code_name {../src/mdsolid.cxx}
+decl {\#include <cmd.h>} {public
+} 
+
+decl {int _stp, _n_ep;} {public
+} 
+
+decl {//Ca_LinePoint *P;} {} 
+
+Function {} {open
+} {
+  Fl_Window w_implant {
+    label {Solid State Molecular Dynamic Simulations} open
+    xywh {500 186 680 625} type Double resizable visible
+  } {
+    Fl_Box viz3d {
+      label {There is not OpenGL available}
+      xywh {210 3 465 415} box THIN_DOWN_BOX resizable
+      code0 {\#include <fl_md_sim.h>}
+      class fl_md_sim
+    }
+    Fl_Group {} {open
+      xywh {5 3 200 426}
+    } {
+      Fl_Group {} {
+        label {Control panel} open
+        xywh {5 18 200 403}
+      } {
+        Fl_Group {} {
+          label {set  /  run  /  stop} open
+          xywh {11 235 189 28} box THIN_DOWN_BOX
+        } {
+          Fl_Button init {
+            label {@->|}
+            callback {//int _x, _y, _z;
+//double _rc = pow(2,1.0/6.0);
+// Constructor con propiedades del material:
+// Numero Atomico
+// Masa Atomica
+// Constante de Red
+// Simbolo Quimico
+// Estructura Cristalina
+//viz3d->mdResetAll();
+//
+//viz3d->mdSimInit();
+//viz3d->mdSetLattConst(1.0);
+//viz3d->mdSetRandScale(_rs->value());
+//viz3d->mdSetSeed((int)_s->value());
+
+//viz3d->mdRangeVelDis((real)_rvd->value());
+//viz3d->mdMaxVelSpl((int)_lvd->value());
+
+// Size of the crystal of Iron
+//viz3d->mdSetCellXYZ(10,10,10);
+//_x = (int)_ux->value();
+//_y = (int)_uy->value();
+//_z = (int)_uz->value();
+//viz3d->mdSetCellXYZ(_x,_y,_z);
+// Radio de corte para la interaccion Fe-Fe (A)
+//viz3d->mdSetRc(3.0,0.2);
+//viz3d->mdSetNumNucl((int)_nk->value());
+
+// Time step
+
+//viz3d->mdSetTimeStep((real)_ts->value()); // 1e-5
+//viz3d->mdSetMotionStep((real)_rs->value()); // 1e-1
+
+// Initial atom positions
+viz3d->set_intial_conditions();
+//SHOW SOME INFORMATION//
+viz3d->show_summary();
+
+//OUTPUT FILE//
+/*viz3d->mdWriteInfoFile("readme");*/
+/////////////////////////////////
+//numpart=md->mdGetSysSize();
+
+//viz3d->mdComputeStartMotionTaget();
+//viz3d->mdSetEpoch((int)_ne->value());
+viz3d->redraw();
+play->activate();}
+            xywh {51 238 34 21}
+          }
+          Fl_Button play {
+            label {@>}
+            callback {//
+  _n_ep=0;
+  real _dat=0, /*_max=0,*/ _tot=0;
+  Ca_LinePoint *_P_u=0, *_P_k=0, *_P_t=0/*, *_P_v=0*/;
+  //
+  _n_ep = viz3d->get_epoch_number();
+  set_k_axis();
+  set_u_axis();
+  set_t_axis();
+  set_m_axis();
+  //
+  //
+  //viz3d->integration_verlet();
+  viz3d->motion_step();
+  //viz3d->eval_properties();
+ 
+  _dat = viz3d->get_k_energy();
+  Ca_Canvas::current(_k_ener); 
+  _k_e->minimum(0.998*_dat);
+  _k_e->maximum(1.002*_dat);
+  _tot = _dat;
+  //
+  _dat = viz3d->get_u_energy();
+  Ca_Canvas::current(_k_ener);
+  _u_e->minimum(0.998*_dat);
+  _u_e->maximum(1.002*_dat); 
+  _tot += _dat;
+  //_u_e->minimum(_max*1.02);
+  //_u_e->maximum(_max*0.98);
+  //
+  Ca_Canvas::current(_t_ener); 
+  _t_e->minimum(_tot*0.998);
+  _t_e->maximum(_tot*1.002);
+  /*
+   for(_stp=0; _stp<viz3d->get_epoch_number(); _stp++){
+    viz3d->mdComputeStartMotionTarget();
+    viz3d->redraw();
+    Fl::check();
+  }
+  */
+  
+  for(_stp=0; _stp<viz3d->get_epoch_number(); _stp++){
+  	viz3d->motion_step();
+  	//viz3d->eval_properties();
+	_dat = viz3d->get_k_energy(); // Data
+	_tot = _dat;
+	//cout<<"Kinetic Energy ="<<dat<<endl;
+	// Start Graphic
+	if(_dat>0){
+		Ca_Canvas::current(_k_ener); 
+		_k_ener->current();
+		_P_k=new Ca_LinePoint(_P_k,_stp,_dat,0,FL_GREEN,FL_BLACK);
+		//viz3d->redraw();
+		if((real)_k_e->maximum()<=_dat*1.02)
+			_k_e->maximum(_dat*1.02);
+		if((real)_k_e->minimum()>=_dat*0.98)
+			_k_e->minimum(_dat*0.98);
+	}
+	_dat = viz3d->get_u_energy(); // Data
+	_tot += _dat;
+	//cout<<"Potential Energy ="<<_dat<<endl;
+	// Graphic
+	//if(_dat){ 
+		Ca_Canvas::current(_u_ener);
+		_P_u=new Ca_LinePoint(_P_u,_stp,_dat,0,FL_GREEN,FL_BLACK);
+		//viz3d->redraw();
+		if((real)_u_e->maximum()<=_dat)
+			_u_e->maximum(_dat*1.02);
+		if((real)_u_e->minimum()>=_dat)
+			_u_e->minimum(_dat*0.98);
+	//}
+		Ca_Canvas::current(_t_ener);
+		_P_t=new Ca_LinePoint(_P_t,_stp,_tot,0,FL_GREEN,FL_BLACK);
+		//viz3d->redraw();
+		if((real)_t_e->maximum()<=_tot*1.02)
+			_t_e->maximum(_tot*1.02);
+		if((real)_t_e->minimum()>=_tot*0.98)
+			_t_e->minimum(_tot*0.98);
+	
+	//viz3d->mdEvalVelDis();
+	//Ca_Canvas::current(_m_vel);
+	//_m_vel->clear();
+	//for(int _i=0; _i<viz3d->get_veldist_size(); _i++){
+		//_dat = viz3d->mdVelDis(_i);
+		//_P_v=new Ca_LinePoint(_P_v,_i,_dat,0,FL_GREEN,FL_BLACK);
+	//}
+	viz3d->redraw();
+	// End Graphic
+	Fl::check();
+  }}
+            xywh {90 238 34 21} deactivate
+          }
+          Fl_Button stop {
+            label {@square}
+            callback {_stp=viz3d->get_epoch_number();
+//viz3d->mdWriteRange("range.xyz", 6);}
+            xywh {129 238 34 21} labelsize 10
+          }
+        }
+        Fl_Group {} {
+          label View
+          xywh {10 282 190 86} box THIN_DOWN_BOX align 5
+        } {
+          Fl_Slider _z {
+            label Zoom
+            callback {viz3d->szoom(_z->value());
+viz3d->redraw();}
+            xywh {63 298 127 14} type Horizontal align 4 minimum 0.1 maximum 2 step 0.02 value 1
+          }
+          Fl_Button {} {
+            label {1:2}
+            callback {_z->value(0.5);
+viz3d->szoom(_z->value());
+viz3d->redraw();}
+            xywh {63 315 21 15} labelfont 1 labelsize 12
+          }
+          Fl_Button {} {
+            label {1:1}
+            callback {_z->value(1.0);
+viz3d->szoom(_z->value());
+viz3d->redraw();}
+            xywh {115 315 21 15} labelfont 1 labelsize 12
+          }
+          Fl_Button {} {
+            label {2:1}
+            callback {_z->value(2.0);
+viz3d->szoom(_z->value());
+viz3d->redraw();}
+            xywh {169 315 21 14} labelfont 1 labelsize 12
+          }
+          Fl_Button _x_f {
+            label X
+            callback {viz3d->v_angle(0.0);
+viz3d->h_angle(90.0);
+viz3d->redraw();}
+            xywh {69 340 34 21} labelfont 1
+          }
+          Fl_Button _y_f {
+            label Y
+            callback {viz3d->v_angle(90.0);
+viz3d->h_angle(90.0);
+viz3d->redraw();}
+            xywh {108 340 34 21} labelfont 1
+          }
+          Fl_Button _z_f {
+            label Z
+            callback {viz3d->v_angle(90.0);
+viz3d->h_angle(0.0);
+viz3d->redraw();}
+            xywh {147 340 34 21} labelfont 1
+          }
+        }
+        Fl_Button {} {
+          label Close
+          callback {_stp=viz3d->get_epoch_number();
+  w_implant->hide();}
+          xywh {125 374 77 21} when 6
+        }
+        Fl_Box {} {
+          label U
+          xywh {20 401 20 20} labelcolor 2
+        }
+        Fl_Box {} {
+          label K
+          xywh {180 401 20 20} labelcolor 2
+        }
+        Fl_Button eos {
+          label {@>}
+          callback {//
+  // Initial atom positions
+  viz3d->eval_eos_lattice();} selected
+          xywh {55 374 34 21}
+        }
+      }
+      Fl_Group {} {open
+        xywh {5 422 200 5} box ENGRAVED_FRAME resizable
+      } {}
+    }
+    Fl_Group _gph_box {open
+      private xywh {5 434 670 179} box THIN_DOWN_BOX color 0
+    } {
+      Fl_Group _u_gph {open
+        xywh {8 439 226 81} box BORDER_BOX color 0 align 5
+      } {
+        Fl_Box {} {
+          xywh {10 439 222 81} box THIN_DOWN_BOX color 0
+        }
+        Fl_Box _u_ener {
+          xywh {62 446 165 48} box FLAT_BOX color 0
+          code0 {\#include<Cartesian.H>}
+          class Ca_Canvas
+        }
+        Fl_Box _u_t {
+          xywh {51 497 176 20} box FLAT_BOX color 0 labelsize 46 labelcolor 2
+          class Ca_X_Axis
+        }
+        Fl_Box _u_e {
+          xywh {16 444 46 56} box FLAT_BOX color 0 labelcolor 2
+          class Ca_Y_Axis
+        }
+      }
+      Fl_Group _k_gph {open
+        xywh {234 439 226 81} box BORDER_BOX color 0 align 5
+      } {
+        Fl_Box {} {
+          xywh {237 439 223 81} box THIN_DOWN_BOX color 0
+        }
+        Fl_Box _k_ener {
+          xywh {287 446 165 48} box FLAT_BOX color 0
+          code0 {\#include<Cartesian.H>}
+          class Ca_Canvas
+        }
+        Fl_Box _k_t {
+          xywh {277 497 175 20} box FLAT_BOX color 0 labelsize 46 labelcolor 2
+          class Ca_X_Axis
+        }
+        Fl_Box _k_e {
+          xywh {242 444 45 56} box FLAT_BOX color 0 labelcolor 2
+          class Ca_Y_Axis
+        }
+      }
+      Fl_Group _t_gph {
+        xywh {9 525 451 81} box BORDER_BOX color 0 align 5
+      } {
+        Fl_Box {} {
+          xywh {10 525 450 81} box THIN_DOWN_BOX color 0
+        }
+        Fl_Box _t_ener {
+          xywh {61 532 390 48} box FLAT_BOX color 0
+          code0 {\#include<Cartesian.H>}
+          class Ca_Canvas
+        }
+        Fl_Box _t_t {
+          xywh {51 583 400 18} box FLAT_BOX color 0 labelsize 46 labelcolor 2
+          class Ca_X_Axis
+        }
+        Fl_Box _t_e {
+          xywh {16 530 45 56} box FLAT_BOX color 0 labelcolor 2
+          class Ca_Y_Axis
+        }
+      }
+      Fl_Group _max_gph {
+        xywh {465 439 205 167} box BORDER_BOX color 0 align 5
+      } {
+        Fl_Box {} {
+          xywh {468 439 202 167} box THIN_DOWN_BOX color 0
+        }
+        Fl_Box _m_vel {
+          xywh {473 441 192 142} box FLAT_BOX color 0
+          code0 {\#include<Cartesian.H>}
+          class Ca_Canvas
+        }
+        Fl_Box _m_v {
+          xywh {470 582 199 21} box FLAT_BOX color 0 labelsize 46 labelcolor 2
+          class Ca_X_Axis
+        }
+        Fl_Box _m_f {
+          xywh {470 443 2 152} box FLAT_BOX color 0 labelcolor 2
+          class Ca_Y_Axis
+        }
+      }
+    }
+  }
+} 
+
+Function {set_k_axis()} {} {
+  code {//_k_e->minimum(0.0);
+//_k_e->maximum(1.0);
+
+_k_e->label_format("%g");
+_k_e->minor_grid_color(fl_gray_ramp(5));
+_k_e->major_grid_color(fl_gray_ramp(10));
+_k_e->label_grid_color(fl_gray_ramp(10));
+_k_e->grid_visible(CA_MINOR_GRID|CA_MAJOR_GRID|CA_LABEL_GRID);
+_k_e->major_step(1);
+_k_e->label_step(1);
+_k_e->label_size(9);
+_k_e->axis_color(FL_WHITE);
+
+_k_t->minimum(0.0);
+_k_t->maximum(21.0);
+_k_t->label_format("%g");
+_k_t->minor_grid_color(fl_gray_ramp(5));
+_k_t->major_grid_color(fl_gray_ramp(10));
+_k_t->label_grid_color(fl_gray_ramp(10));
+_k_t->grid_visible(CA_MINOR_GRID|CA_MAJOR_GRID|CA_LABEL_GRID);
+_k_t->major_step(1);
+_k_t->label_step(1);
+_k_t->label_size(9);
+_k_t->axis_color(FL_WHITE);
+
+_k_ener->clear();
+_k_t->maximum(_n_ep);} {}
+} 
+
+Function {set_u_axis()} {} {
+  code {_u_e->minimum(-1.0);
+_u_e->maximum(1.0);
+
+_u_e->label_format("%g");
+_u_e->minor_grid_color(fl_gray_ramp(5));
+_u_e->major_grid_color(fl_gray_ramp(10));
+_u_e->label_grid_color(fl_gray_ramp(10));
+_u_e->grid_visible(CA_MINOR_GRID|CA_MAJOR_GRID|CA_LABEL_GRID);
+_u_e->major_step(1);
+_u_e->label_step(1);
+_u_e->label_size(9);
+_u_e->axis_color(FL_WHITE);
+
+_u_t->minimum(0.0);
+_u_t->maximum(21.0);
+_u_t->label_format("%g");
+_u_t->minor_grid_color(fl_gray_ramp(5));
+_u_t->major_grid_color(fl_gray_ramp(10));
+_u_t->label_grid_color(fl_gray_ramp(10));
+_u_t->grid_visible(CA_MINOR_GRID|CA_MAJOR_GRID|CA_LABEL_GRID);
+_u_t->major_step(1);
+_u_t->label_step(1);
+_u_t->label_size(9);
+_u_t->axis_color(FL_WHITE);
+
+_u_ener->clear();
+_u_t->maximum(_n_ep);} {}
+} 
+
+Function {set_t_axis()} {} {
+  code {//_t_e->minimum(0.0);
+//_t_e->maximum(1.0);
+
+_t_e->label_format("%g");
+_t_e->minor_grid_color(fl_gray_ramp(5));
+_t_e->major_grid_color(fl_gray_ramp(10));
+_t_e->label_grid_color(fl_gray_ramp(10));
+_t_e->grid_visible(CA_MINOR_GRID|CA_MAJOR_GRID|CA_LABEL_GRID);
+_t_e->major_step(1);
+_t_e->label_step(1);
+_t_e->label_size(9);
+_t_e->axis_color(FL_WHITE);
+
+_t_t->minimum(0.0);
+_t_t->maximum(21.0);
+_t_t->label_format("%g");
+_t_t->minor_grid_color(fl_gray_ramp(5));
+_t_t->major_grid_color(fl_gray_ramp(10));
+_t_t->label_grid_color(fl_gray_ramp(10));
+_t_t->grid_visible(CA_MINOR_GRID|CA_MAJOR_GRID|CA_LABEL_GRID);
+_t_t->major_step(1);
+_t_t->label_step(1);
+_t_t->label_size(9);
+_t_t->axis_color(FL_WHITE);
+
+_t_ener->clear();
+_t_t->maximum(_n_ep);} {}
+} 
+
+Function {set_m_axis()} {} {
+  code {_m_f->minimum(-0.01);
+_m_f->maximum(1.01);
+
+_m_f->label_format("%g");
+_m_f->minor_grid_color(fl_gray_ramp(5));
+_m_f->major_grid_color(fl_gray_ramp(10));
+_m_f->label_grid_color(fl_gray_ramp(10));
+_m_f->grid_visible(CA_MINOR_GRID|CA_MAJOR_GRID|CA_LABEL_GRID);
+_m_f->major_step(1);
+_m_f->label_step(1);
+_m_f->label_size(9);
+_m_f->axis_color(FL_WHITE);
+
+_m_v->minimum(0.0);
+_m_v->maximum(21.0);
+_m_v->label_format("%g");
+_m_v->minor_grid_color(fl_gray_ramp(5));
+_m_v->major_grid_color(fl_gray_ramp(10));
+_m_v->label_grid_color(fl_gray_ramp(10));
+_m_v->grid_visible(CA_MINOR_GRID|CA_MAJOR_GRID|CA_LABEL_GRID);
+_m_v->major_step(1);
+_m_v->label_step(1);
+_m_v->label_size(9);
+_m_v->axis_color(FL_WHITE);
+
+_m_vel->clear();
+_m_v->maximum(viz3d->get_veldist_size());} {}
+} 
