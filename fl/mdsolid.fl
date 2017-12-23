@@ -14,8 +14,8 @@ decl {//Ca_LinePoint *P;} {private local
 Function {} {open
 } {
   Fl_Window w_implant {
-    label {Molecular Dynamic Simulation} open selected
-    xywh {289 103 680 625} type Double resizable visible
+    label {Molecular Dynamics Simulation} open selected
+    xywh {289 131 680 625} type Double resizable visible
   } {
     Fl_Box viz3d {
       label {There is not OpenGL available}
