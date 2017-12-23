@@ -1,4 +1,4 @@
-# Edmanuel Torres 04/07/2007
+MDSolid
 
 This is a basic molecular dynamics simulation code
 of solids using embedded atom method potentials
