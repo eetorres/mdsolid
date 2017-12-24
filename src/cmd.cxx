@@ -1,6 +1,5 @@
-// Programado por: Edmanuel E. Torres Amaris
-// simulaciones de Dinamica Molecular de Solidos (Iron BCC)
-
+// Edmanuel Torres
+// Molecular dynamics simulation
 
 #include <cmd.h>
 #include <msmvtl/const.h>
