@@ -1,5 +1,6 @@
 // Edmanuel Torres
 // Molecular dynamics simulation
+// 2007-2017
 
 #include <cmd.h>
 #include <msmvtl/const.h>
