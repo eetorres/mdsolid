@@ -1,10 +1,7 @@
 //========================================================================
-// Molcular Dynamics Vector Librayry V 1.2 (Beta version)
-// Mini Scientific Matrix and Vector Template Library - MSMVTL
-// MSMVTL is a easy to use Matrix and Vector template implementation
-// for peolpe who want to work in numerical or simulation programming.
-//
-// TVmath.h
+// Molcular Dynamics Vector Library V 1.2 (Beta version)
+// 
+// MDVect.H
 //
 // Copyrigth 2002 by Edmanuel Eduardo Torres Amaris
 // eetorres@gmail.com
