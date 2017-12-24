@@ -1,6 +1,6 @@
 // Edmanuel Torres 
-// programa para lrealizar simulaciones de dinamica molecular
-// Duesseldorf, Germany. July, 2007
+// MD class for molecular dynamics
+// 2007
 
 #ifndef _MD_H_
 #define _MD_H_
