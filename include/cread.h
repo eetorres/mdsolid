@@ -1,6 +1,6 @@
 // Edmanuel Torres 
-// programa para lrealizar simulaciones de dinamica molecular
-// Duesseldorf, Germany. July, 2007
+// Read input files
+// 2007
 
 #ifndef _CREAD_H_
 #define _CREAD_H_
