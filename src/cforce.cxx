@@ -1,6 +1,5 @@
-// Programado por: Edmanuel E. Torres Amaris
-// simulaciones de Dinamica Molecular de Solidos (Iron BCC)
-
+// Edmanuel Torres
+// Forces for molecular dynamics simulations
 
 #include <cforce.h>
 
