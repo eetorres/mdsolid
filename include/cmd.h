@@ -1,6 +1,6 @@
 // Edmanuel Torres 
 // MD class for molecular dynamics
-// 2007
+// 2007-2017
 
 #ifndef _MD_H_
 #define _MD_H_
